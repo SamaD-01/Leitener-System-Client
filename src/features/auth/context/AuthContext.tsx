@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from "react"
+import { createContext, useContext, useState } from "react"
 import { login as loginService } from "@/services/api/auth.api"
 
 type AuthContextType = {
@@ -13,12 +13,9 @@ const AuthContext = createContext<AuthContextType | null>(null)
 const TOKEN_KEY = "auth_token"
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [token, setToken] = useState<string | null>(null)
-
-  useEffect(() => {
-    const storedToken = localStorage.getItem(TOKEN_KEY)
-    if (storedToken) setToken(storedToken)
-  }, [])
+  const [token, setToken] = useState<string | null>(() => {
+    return localStorage.getItem(TOKEN_KEY)
+  })
 
   async function login(email: string, password: string) {
     const response = await loginService(email, password)

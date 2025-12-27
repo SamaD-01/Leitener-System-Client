@@ -13,9 +13,8 @@ test("login stores token and redirects", async () => {
     </AuthProvider>
   )
 
-  await userEvent.type(screen.getByPlaceholderText(/email/i), "test@test.com")
-  await userEvent.type(screen.getByPlaceholderText(/password/i), "password")
-  await userEvent.click(screen.getByRole("button", { name: /sign in/i }))
+  await userEvent.type(screen.getByPlaceholderText(/username/i), "TestUser")
+  await userEvent.click(screen.getByRole("button", { name: /continue/i }))
 
   await waitFor(() => {
     expect(localStorage.getItem("auth_token")).toBeTruthy()

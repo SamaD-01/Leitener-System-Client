@@ -5,8 +5,7 @@ import { Input } from "@/shared/components/ui/shadcn/input"
 import { useNavigate } from "react-router"
 
 export default function LoginPage() {
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
+  const [username, setUsername] = useState("")
   const [error, setError] = useState("")
   const { login } = useAuth()
   const navigate = useNavigate()
@@ -14,7 +13,8 @@ export default function LoginPage() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     try {
-      await login(email, password)
+      // Use "Guest" if no username provided, dummy password
+      await login(username || "Guest", "dummy-password")
       navigate("/")
     } catch {
       setError("Login failed")
@@ -22,30 +22,33 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center">
-      <form onSubmit={handleSubmit} className="w-full max-w-sm space-y-4">
-        <h1 className="text-2xl font-bold">Login</h1>
+    <div className="flex min-h-screen items-center justify-center p-4">
+      <div className="w-full max-w-sm space-y-6">
+        <div className="text-center space-y-2">
+          <h1 className="text-3xl font-bold tracking-tight">Welcome Back</h1>
+          <p className="text-muted-foreground">
+            Enter your username to continue your progress
+          </p>
+        </div>
 
-        <Input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={e => setEmail(e.target.value)}
-        />
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="space-y-2">
+            <Input
+              type="text"
+              placeholder="Username (optional)"
+              value={username}
+              onChange={e => setUsername(e.target.value)}
+              className="text-center text-lg"
+            />
+          </div>
 
-        <Input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={e => setPassword(e.target.value)}
-        />
+          {error && <p className="text-sm text-destructive text-center">{error}</p>}
 
-        {error && <p className="text-sm text-destructive">{error}</p>}
-
-        <Button type="submit" className="w-full">
-          Sign in
-        </Button>
-      </form>
+          <Button type="submit" className="w-full" size="lg">
+            {username ? "Continue" : "Continue as Guest"}
+          </Button>
+        </form>
+      </div>
     </div>
   )
 }
